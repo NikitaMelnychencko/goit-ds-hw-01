@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "goit-ds-hw-01"
+version = "0.1.0"
+description = "Assistant bot for contacts management"
+authors = ["Your Name <your.email@example.com>"]
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+colorama = "^0.4.6"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+assistant-bot = "src.main:main"
