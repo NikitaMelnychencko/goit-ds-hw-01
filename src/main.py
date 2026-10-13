@@ -1,6 +1,6 @@
 from services.NotebookServices import AddressBook
 from services.DataServices import DataServices
-from helper.color_loger import log_error
+from views import ConsoleView
 from controlers.index import (
     add_contact, change_contact, find_contact, remove_phone,
     remove_contact, add_birthday, show_birthday, show_birthdays,
@@ -8,82 +8,52 @@ from controlers.index import (
 )
 
 def parse_input(user_input):
-  cmd, *args = user_input.split()
-  cmd = cmd.strip().lower()
-  return cmd, *args
-
-
-welcome_bunner = """
- █████╗ ███████╗███████╗██╗███████╗████████╗ █████╗ ███╗   ██╗████████╗    ██████╗  ██████╗ ████████╗
-██╔══██╗██╔════╝██╔════╝██║██╔════╝╚══██╔══╝██╔══██╗████╗  ██║╚══██╔══╝    ██╔══██╗██╔═══██╗╚══██╔══╝
-███████║███████╗███████╗██║███████╗   ██║   ███████║██╔██╗ ██║   ██║       ██████╔╝██║   ██║   ██║
-██╔══██║╚════██║╚════██║██║╚════██║   ██║   ██╔══██║██║╚██╗██║   ██║       ██╔══██╗██║   ██║   ██║
-██║  ██║███████║███████║██║███████║   ██║   ██║  ██║██║ ╚████║   ██║       ██████╔╝╚██████╔╝   ██║
-╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝       ╚═════╝  ╚═════╝    ╚═╝
-
-"""
-
-commands = """
-  Commands:
-  ---------
-  1. hello
-  2. add <username> <phone>
-  3. change <username> <old_phone> <new_phone>
-  4. remove_phone <username> <phone>
-    Description: remove phone from contact
-  5. remove <username>
-    Description: remove contact
-  6. phone <username>
-  7. add-birthday <username> <birthday> Format:DD.MM.YYYY
-  8. show-birthday <username>
-  9. birthdays
-  10. all
-  11. close, exit
-  ---------
-"""
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
 
 
 def main():
+    view = ConsoleView()
     data = DataServices()
     book = AddressBook(data.get_init_data())
-    print(welcome_bunner)
-    print("Welcome to the assistant bot!")
-    print(commands)
+    view.display_welcome()
+    view.display_commands()
 
     while True:
-        user_input = input("Enter a command: ")
+        user_input = view.prompt("Enter a command: ")
         try:
             command, *args = parse_input(user_input)
-        except Exception as e:
-            log_error("Invalid command.")
+        except Exception:
+            view.display_error("Invalid command.")
             continue
 
         match (command.lower()):
             case "hello":
-                print("How can I help you?")
+                view.display_message("How can I help you?")
             case "add":
-                add_contact(book, args)
+                add_contact(book, args, view)
             case "change":
-                change_contact(book, args)
+                change_contact(book, args, view)
             case "phone":
-                find_contact(book, args)
+                find_contact(book, args, view)
             case "remove_phone":
-                remove_phone(book, args)
+                remove_phone(book, args, view)
             case "remove":
-                remove_contact(book, args)
+                remove_contact(book, args, view)
             case "add-birthday":
-                add_birthday(book, args)
+                add_birthday(book, args, view)
             case "show-birthday":
-                show_birthday(book, args)
+                show_birthday(book, args, view)
             case "birthdays":
-                show_birthdays(book, args)
+                show_birthdays(book, args, view)
             case "all":
-                show_all(book, args)
+                show_all(book, args, view)
             case "exit" | "close":
-                if exit_program(book, data):
+                if exit_program(book, data, view):
                     break
             case _:
-                log_error("Invalid command.")
+                view.display_error("Invalid command.")
 
 if __name__ == "__main__":
     main()
