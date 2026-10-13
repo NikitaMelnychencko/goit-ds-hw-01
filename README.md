@@ -1,40 +1,40 @@
 # Helpful Bot
-A bot to help with daily tasks
 
-## Installation Instructions
+A console personal assistant for contacts, phone numbers, and birthdays.
 
-1. Install Python (version 3.8 or newer)
-2. Create and activate a virtual environment:
+The app runs only as an interactive command-line program. It does not need an HTTP port.
 
-For Windows (PowerShell):
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
+## Requirements
 
-For Windows (CMD):
-```cmd
-python -m venv .venv
-.\.venv\Scripts\activate.bat
-```
+- Python 3.13
+- [Poetry](https://python-poetry.org/docs/#installation) 2.x
 
-For Linux/macOS:
+## Local setup
+
+1. Install dependencies (Poetry creates the virtual environment):
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+poetry install
 ```
 
-3. Install dependencies:
+2. Run the assistant:
+
 ```bash
-pip install -r requirements.txt
+poetry run python src/main.py
 ```
 
-4. Run the bot:
+Type `exit` or `close` to quit.
+
+## Docker
+
+Build the image:
+
 ```bash
-cd src
-python main.py
+docker build -t helpful-bot .
 ```
 
-## Notes
-- Make sure you have Python installed
-- If you encounter issues with virtual environment activation, try running the terminal as administrator
+Run it interactively (`-it` is required because the bot reads commands from the terminal):
+
+```bash
+docker run -it --rm helpful-bot
+```

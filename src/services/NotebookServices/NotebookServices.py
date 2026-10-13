@@ -145,16 +145,16 @@ class AddressBook(UserDict):
 
     for contact in self.data.values():
       if contact.birthday:
-        # Конвертуємо datetime в date для порівняння
+        # Convert the stored birthday string to a date for comparison
         birthday_date = datetime.strptime(contact.birthday.value, "%d.%m.%Y").date()
         birthday_this_year = birthday_date.replace(year=today.year)
 
-        # Перевіряємо, чи не буде припадати день народження вже наступного року
+        # If the birthday already passed this year, use next year's date
         if birthday_this_year < today:
           birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
         if 0 <= (birthday_this_year - today).days <= days:
-          # Переносимо дату привітання на наступний робочий день, якщо день народження припадає на вихідний
+          # Move the congratulation to the next weekday when the birthday falls on a weekend
           birthday_this_year = self.adjust_for_weekend(birthday_this_year)
           congratulation_date_str = birthday_this_year.strftime("%Y.%m.%d")
           upcoming_birthdays.append({"name": contact.name.value, "congratulation_date": congratulation_date_str})
